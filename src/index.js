@@ -6,13 +6,17 @@ const totalVotes = document.querySelector('#vote-count');
 const form = document.getElementById('votes-form');
 const input = document.getElementById('votes');
 const resetButton = document.getElementById('reset-btn');
-let myData = 0;
+let characterForm = document.getElementById('character-form');
+const newCharacterName = document.getElementById('newName');
+const newCharacterUrl = document.getElementById('image-url');
+
 fetch('http://localhost:3000/characters')
 .then(res => res.json())
 .then(data => {
     myData = data;
     addNames(data);
     addEventListener(data);  
+    addCharacter();
 });
 
 function addNames(newData){
@@ -90,6 +94,32 @@ function removeVotes(finder){
             },
             body: JSON.stringify({
                 votes: 0
+            })
+         })
+         .then(res => res.json())
+         .then(data => console.log(data))
+         .catch(error => {
+            console.log(error);
+         })
+       }
+    )
+}
+
+function addCharacter(){
+    characterForm.addEventListener('submit', function(event){
+        event.preventDefault();    
+         
+                    
+         fetch(`http://localhost:3000/characters/`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 
+                'Accept': 'application/json'               
+            },
+            body: JSON.stringify({
+                name: newCharacterName.value,
+                image: newCharacterUrl.value,
+                votes: 0,
             })
          })
          .then(res => res.json())
